@@ -9,7 +9,7 @@ const CONFIG = {
    * sibf.kr/page/22 에서 부스 배치도 이미지 URL을 복사해 넣으세요.
    * 예) 'https://sibf.kr/upload/page/map2026.jpg'
    */
-  mapImageUrl: '',
+  mapImageUrl: './images/map.jpg',
 
   /**
    * 부스 정보 Google Sheets CSV URL
