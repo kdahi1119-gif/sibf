@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIBF 2026 가이드 — 서울국제도서전</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ───── 상단 헤더 ───── -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-year">2026</span>
+      <span class="logo-title">서울국제도서전</span>
+      <span class="logo-sub">SIBF GUIDE</span>
+    </div>
+    <nav class="main-nav">
+      <button class="nav-btn active" data-view="map">🗺 부스 지도</button>
+      <button class="nav-btn" data-view="schedule">📅 프로그램</button>
+      <button class="nav-btn" data-view="wishlist">⭐ 내 위시리스트</button>
+    </nav>
+    <div class="header-user">
+      <span id="user-greeting" class="user-greeting hidden"></span>
+      <button id="nickname-btn" class="btn-outline">닉네임 설정</button>
+    </div>
+  </div>
+</header>
+
+<!-- ───── 닉네임 모달 ───── -->
+<div id="nickname-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h2 class="modal-title">닉네임으로 시작하기</h2>
+    <p class="modal-desc">닉네임을 설정하면 방문하고 싶은 부스를 저장할 수 있어요.<br>같은 기기에서 다시 접속하면 위시리스트가 유지됩니다.</p>
+    <input type="text" id="nickname-input" class="text-input" placeholder="닉네임 입력 (2~12자)" maxlength="12" />
+    <div id="nickname-error" class="error-msg hidden"></div>
+    <div class="modal-actions">
+      <button id="nickname-cancel" class="btn-ghost">취소</button>
+      <button id="nickname-confirm" class="btn-primary">시작하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ───── 부스 상세 모달 ───── -->
+<div id="booth-modal" class="modal-overlay hidden">
+  <div class="modal-box booth-detail">
+    <button class="modal-close" id="booth-close">✕</button>
+    <div class="booth-image-wrap">
+      <img id="booth-img" src="" alt="" />
+    </div>
+    <div class="booth-info">
+      <span id="booth-number" class="booth-number-badge"></span>
+      <h2 id="booth-name" class="booth-name"></h2>
+      <p id="booth-desc" class="booth-desc"></p>
+      <a id="booth-url" href="#" target="_blank" class="booth-link">공식 사이트 방문 →</a>
+    </div>
+    <div class="booth-actions">
+      <button id="booth-wishlist-btn" class="btn-wish">⭐ 위시리스트에 추가</button>
+    </div>
+  </div>
+</div>
+
+<!-- ───── 지도 뷰 ───── -->
+<section id="view-map" class="view active">
+  <div class="map-toolbar">
+    <div class="map-legend">
+      <span class="legend-item"><span class="dot dot-normal"></span> 부스</span>
+      <span class="legend-item"><span class="dot dot-wish"></span> 위시리스트</span>
+    </div>
+    <div class="map-search">
+      <input type="text" id="booth-search" placeholder="부스명 또는 번호 검색…" class="search-input" />
+    </div>
+  </div>
+  <div class="map-container">
+    <div id="map-wrapper">
+      <img id="map-image" src="" alt="서울국제도서전 부스 배치도" />
+      <div id="booth-pins"></div>
+    </div>
+    <div id="map-loading" class="map-loading">
+      <div class="spinner"></div>
+      <p>지도를 불러오는 중…</p>
+    </div>
+    <div id="map-placeholder" class="map-placeholder hidden">
+      <div class="placeholder-inner">
+        <p class="placeholder-icon">🗺</p>
+        <p class="placeholder-text">지도 이미지를 설정해 주세요</p>
+        <p class="placeholder-hint">
+          <code>js/config.js</code>의 <code>mapImageUrl</code>에<br>
+          코엑스 부스 배치도 이미지 URL을 입력하세요
+        </p>
+      </div>
+    </div>
+  </div>
+  <p class="map-tip">💡 핀을 클릭하면 부스 정보를 확인할 수 있어요</p>
+</section>
+
+<!-- ───── 프로그램 뷰 ───── -->
+<section id="view-schedule" class="view hidden">
+  <div class="schedule-header">
+    <h2 class="section-title">전시 프로그램 일정</h2>
+    <div class="day-tabs" id="day-tabs"></div>
+  </div>
+  <div class="schedule-body">
+    <div id="schedule-loading" class="center-msg">
+      <div class="spinner"></div><p>일정을 불러오는 중…</p>
+    </div>
+    <div id="schedule-grid" class="schedule-grid hidden"></div>
+    <div id="schedule-empty" class="center-msg hidden">
+      <p>📭 등록된 프로그램이 없습니다</p>
+    </div>
+  </div>
+</section>
+
+<!-- ───── 위시리스트 뷰 ───── -->
+<section id="view-wishlist" class="view hidden">
+  <div class="wishlist-header">
+    <h2 class="section-title">내 위시리스트</h2>
+    <p id="wishlist-owner" class="wishlist-owner"></p>
+  </div>
+  <div id="wishlist-login-prompt" class="center-msg">
+    <p>⭐ 닉네임을 설정하면 위시리스트를 사용할 수 있어요</p>
+    <button class="btn-primary" onclick="openNicknameModal()">닉네임 설정하기</button>
+  </div>
+  <div id="wishlist-content" class="hidden">
+    <div id="wishlist-empty" class="center-msg hidden">
+      <p>아직 저장한 부스가 없어요.<br>지도에서 부스를 클릭해 추가해보세요!</p>
+    </div>
+    <div id="wishlist-grid" class="wishlist-grid"></div>
+  </div>
+</section>
+
+<script src="js/config.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/sheets.js"></script>
+<script src="js/map.js"></script>
+<script src="js/schedule.js"></script>
+<script src="js/wishlist.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
