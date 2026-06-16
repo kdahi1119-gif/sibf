@@ -21,7 +21,7 @@ const CONFIG = {
    * pinX, pinY: 지도 이미지 기준 퍼센트 위치 (0~100)
    * 예) 지도 왼쪽 30%, 위에서 45% 위치면  pinX=30, pinY=45
    */
-  boothsSheetUrl: '',
+  boothsSheetUrl: 'https://docs.google.com/spreadsheets/d/1sh6clfawQrypkId_EbM3MHMl8Q-GpWw-LcN65mTUkbA/edit?gid=0#gid=0',
 
   /**
    * 프로그램 일정 Google Sheets CSV URL
@@ -32,7 +32,7 @@ const CONFIG = {
    * date 형식: 2026-06-24
    * time/endTime 형식: 10:00
    */
-  scheduleSheetUrl: '',
+  scheduleSheetUrl: 'https://docs.google.com/spreadsheets/d/18jUGZtB4NmEyR-GDp6h10vhMmA8Cnyw5idoiOR5OBXI/edit?gid=0#gid=0',
 
   /**
    * 행사 날짜 목록
